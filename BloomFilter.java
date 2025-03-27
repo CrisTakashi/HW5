@@ -1,6 +1,6 @@
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   Cristian Arroyo / 001
  *
  *   Note, additional comments provided throughout source code is
  *   for educational purposes.
@@ -13,6 +13,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.security.SecureRandom;
 import java.lang.Math;
+
+import static java.util.Objects.hash;
 
 
 /**
@@ -76,6 +78,9 @@ class BloomFilter {
     private static final long[] byteTable;
     private static final long HSTART = 0xBB40E64DA205B064L;
     private static final long HMULT = 7664345821815920749L;
+    private boolean[] bitArray;  // The Bloom filter bit array
+    private int numHashes;       // Number of hash functions
+
 
     /*
      * Hash provision code provided below:
@@ -187,6 +192,7 @@ class BloomFilter {
     }
 
 
+
     /*
      * Method add
      *
@@ -215,17 +221,28 @@ class BloomFilter {
      * @param boolean - false if not in set, else true for most probably in set
      */
 
-    public boolean contains(String s) {
+    public boolean contains(String key) {
+        if (key == null) {
+            return false; // If key is null, return false immediately
+        }
 
-        // ADD YOUR CODE HERE - DO NOT FORGET TO ADD YOUR NAME AT TOP OF FILE
-        //
-        // HINT: the bitmap is the private class variable 'data', and it is
-        // of type BitSet (Java class BitSet). See Oracle documentation for
-        // this class on available methods. You can also see how method 'add'
-        // in this class uses the object.
+        // Loop through all the hash functions
+        for (int i = 0; i < this.numHashes; i++) {
+            long hash = hashCode(key, i);  // Call the hash function with the index i
+            int index = (int)(hash & this.hashMask);  // Ensure the index is within bounds using the hashMask
 
-        return false;
+            // If any bit is 0 (false), the key is definitely NOT in the filter
+            if (!this.data.get(index)) {
+                return false;
+            }
+        }
+
+        // If all relevant bits are 1, the key might be in the filter (probabilistic result)
+        return true;
     }
+
+
+
 
 
     /*********************************
