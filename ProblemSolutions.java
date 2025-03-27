@@ -1,6 +1,6 @@
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   Cristian Arroyo / 001
  *
  *   This java file contains the problem solutions of isSubSet, findKthLargest,
  *   and sort2Arrays methods. You should utilize the Java Collection Framework for
@@ -30,12 +30,22 @@ class ProblemSolutions {
      * @return      - returns boolean value B is a subset of A.
      */
 
-    public boolean isSubset(int list1[], int list2[]) {
+    public static boolean isSubset(int[] list1, int[] list2) {
+        HashSet<Integer> set = new HashSet<>();
+        for (int num : list1) { // Store elements of list1 in a set
+            set.add(num);
+        }
 
-        // ADD YOU CODE HERE -- DON'T FORGET TO ADD YOR NAME AT TOP OF FILE
+        for (int num : list2) { // Check if all elements in list2 exist in set
+            if (!set.contains(num)) {
+                return false;
+            }
+        }
 
-        return false;
+        return true;
     }
+
+
 
 
     /**
@@ -51,12 +61,20 @@ class ProblemSolutions {
      * @return      - the value in the array which is the kth maximum value
      */
 
-    public int findKthLargest(int[] array, int k) {
+    public static int findKthLargest(int[] array, int k) {
+        // Use a PriorityQueue (min-heap) to maintain the k largest elements
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>(k);
 
-        // ADD YOUR CODE HERE
+        for (int num : array) {
+            minHeap.offer(num); // Add element to the heap
+            if (minHeap.size() > k) {
+                minHeap.poll(); // Remove the smallest element if the heap size exceeds k
+            }
+        }
 
-        return 0;
+        return minHeap.peek(); // The root of the heap is the k-th largest element
     }
+
 
 
     /**
@@ -72,11 +90,17 @@ class ProblemSolutions {
      * @return          - Sorted array with all elements in A and B.
      */
 
-    public int[] sort2Arrays(int[] array1, int[] array2) {
+    public static int[] sort2Arrays(int[] array1, int[] array2) {
+        // Create a merged array
+        int[] merged = new int[array1.length + array2.length];
+        System.arraycopy(array1, 0, merged, 0, array1.length);
+        System.arraycopy(array2, 0, merged, array1.length, array2.length);
 
-        // ADD YOU CODE HERE
+        // Sort the merged array
+        Arrays.sort(merged);
 
-        return null;
+        return merged;
     }
+
 
 }
